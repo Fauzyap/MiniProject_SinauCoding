@@ -30,7 +30,7 @@
           <div class="card">
             <div class="card-header chead">Dashboard</div>
             <div class="d-flex justify-content-between p-2">
-              <caption>
+              <caption class="kepsyen">
                 Barang
               </caption>
               <router-link to="/createbar" class="btn btn-primary">Tambah</router-link>
@@ -59,8 +59,10 @@
                 <td>{{ dataTable?.supplier?.alamat }}</td>
                 <td>{{ dataTable?.supplier?.noTelp }}</td>
                 <td>
-                  <button type="button" class="btn btn-danger m-1">Hapus</button>
-                  <router-link type="button" class="btn btn-waring" to="/home">Update</router-link>
+                  <router-link to="#">
+                    <button @click="deleteTableRow(dataTable.id)" class="btn btn-danger action">Hapus</button>
+                  </router-link>
+                  <router-link type="button" class="btn btn-waring" :to="`/updatebar/${dataTable.id}`">Update</router-link>
                 </td>
               </tr>
             </tbody>
@@ -70,6 +72,13 @@
     </div>
   </div>
 </template>
+
+<style scoped>
+.kepsyen{
+  font-weight: bolder;
+}
+</style>
+
 
 <script>
 import axios from "axios";
@@ -97,6 +106,24 @@ export default {
         },
       });
       this.dataTable = data;
+    },
+    async deleteTableRow(id) {
+      console.log("id:", id);
+      await axios
+        .delete("http://159.223.57.121:8090/barang/delete/" + id, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "application/json",
+          },
+        })
+        .then(async (response) => {
+          const data = await response.data;
+
+          if (data.status === "OK") {
+            alert("Hapus Barang sukses");
+            this.getData();
+          }
+        });
     },
   },
 };

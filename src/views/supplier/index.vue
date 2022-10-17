@@ -30,73 +30,96 @@
           <div class="card">
             <div class="card-header chead">Dashboard</div>
             <div class="d-flex justify-content-between p-2">
-              <caption>
-                Barang
+              <caption class="kepsyen">
+                Supplier
               </caption>
               <router-link to="/createsup" class="btn btn-primary">Tambah</router-link>
             </div>
           </div>
-      
-        <table class="table">
-          <thead>
-            <tr class="table-active">
-              <th scope="col">NO</th>
-              <th scope="col">Nama Supplier</th>
-              <th scope="col">Alamat</th>
-              <th scope="col">No Telpon</th>
-              <th scope="col">Aksi</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(dataTable, index) in dataTable.data" :key="dataTable.id">
-              <th scope="row">{{ index + 1 }}</th>
-              <td>{{ dataTable.namaSupplier }}</td>
-              <td>{{ dataTable.alamat }}</td>
-              <td>{{ dataTable.noTelp }}</td>
-              
-              <td>
-                <button type="button" class="btn btn-danger m-1">Hapus</button>
-                <router-link type="button" class="btn btn-waring" to="/home">Update</router-link>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+
+          <table class="table">
+            <thead>
+              <tr class="table-active">
+                <th scope="col">NO</th>
+                <th scope="col">Nama Supplier</th>
+                <th scope="col">Alamat</th>
+                <th scope="col">No Telpon</th>
+                <th scope="col">Aksi</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(dataTable, index) in dataTable.data" :key="dataTable.id">
+                <th scope="row">{{ index + 1 }}</th>
+                <td>{{ dataTable.namaSupplier }}</td>
+                <td>{{ dataTable.alamat }}</td>
+                <td>{{ dataTable.noTelp }}</td>
+
+                <td>
+                  <router-link to="#">
+                    <button @click="deleteTableRow(dataTable.id)" class="btn btn-danger action">Hapus</button>
+                  </router-link>
+                  <router-link type="button" class="btn btn-waring" :to="`/updatesup/${dataTable.id}`">Update</router-link>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
-      
-    </div>
-    
-  </template>
-  
-  <script>
-  import axios from "axios";
-  
-  export default {
-    name: "tableSupplier",
-    data: function () {
-      return {
-        dataTable: [],
-        name: localStorage.getItem("profileName"),
-      };
+  </div>
+</template>
+
+<style scoped>
+.keypsyen {
+  font-weight: bolder;
+}
+</style>
+
+<script>
+import axios from "axios";
+
+export default {
+  name: "tableSupplier",
+  data: function () {
+    return {
+      dataTable: [],
+      name: localStorage.getItem("profileName"),
+    };
+  },
+  created() {
+    this.getData();
+  },
+  methods: {
+    async getData() {
+      const { data } = await axios.get("http://159.223.57.121:8090/supplier/find-all", {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+        params: {
+          offset: 0,
+          limit: 15,
+        },
+      });
+      this.dataTable = data;
     },
-    created() {
-      this.getData();
-    },
-    methods: {
-      async getData() {
-        const { data } = await axios.get("http://159.223.57.121:8090/supplier/find-all", {
+    async deleteTableRow(id) {
+      console.log("id:", id);
+      await axios
+        .delete("http://159.223.57.121:8090/supplier/delete/" + id, {
           headers: {
-            Authorization: "Bearer " + localStorage.getItem("token"),
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "application/json",
           },
-          params: {
-            offset: 0,
-            limit: 15,
-          },
+        })
+        .then(async (response) => {
+          const data = await response.data;
+
+          if (data.status === "OK") {
+            alert("Hapus Supplier sukses");
+            this.getData();
+          }
         });
-        this.dataTable = data;
-      },
     },
-  };
-  </script>
-  
+  },
+};
+</script>

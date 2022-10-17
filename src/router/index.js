@@ -27,9 +27,19 @@ const routes = [
     component: () => import("../views/barang/create.vue"),
   },
   {
+    path: "/updatebar/:id",
+    name: "updatebar",
+    component: () => import("../views/barang/update.vue"),
+  },
+  {
     path: "/createsup",
     name: "createsup",
     component: () => import("../views/supplier/create.vue"),
+  },
+  {
+    path: "/updatesup/:id",
+    name: "updatesup",
+    component: () => import("../views/supplier/update.vue"),
   },
   {
     path: "/about",

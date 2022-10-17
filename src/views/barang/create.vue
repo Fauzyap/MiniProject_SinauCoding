@@ -13,21 +13,21 @@
       <div class="card">
         <h5 class="card-header chead text-center">Tambah Barang</h5>
         <div class="card-body">
-          <form @submit.prevent="submitData">
+          <form @submit.prevent="updateBarang">
             <div class="form-group">
-              <label for="">Nama Barang:</label>
+              <label for="inputNama">Nama Barang:</label>
               <input type="text" v-model="username" class="form-control" placeholder="Masukan Nama Barang" />
             </div>
             <div class="form-group">
-              <label for="">Harga Barang:</label>
+              <label for="inputHarga">Harga Barang:</label>
               <input type="text" v-model="password" class="form-control" placeholder="Masukan Harga Barang" />
             </div>
             <div class="form-group">
-              <label for="">Stok Barang:</label>
+              <label for="inputStok">Stok Barang:</label>
               <input type="text" v-model="password" class="form-control" placeholder="Masukan Jumlah Stok Barang" />
             </div>
             <div class="form-group">
-              <label for="">Stok Barang:</label>
+              <label for="inputSup">Supplier Barang:</label>
               <select class="form-select" aria-label="Default select example">
                 <option></option>
                 <option value="1">One</option>
@@ -48,8 +48,64 @@
 </template>
 
 <script>
-import axios from "axios";
-export default {};
+import axios from "axios"
+export default {
+  data: function () {
+    return {
+      namaBarang:'',
+      harga :'',
+      stok:'',
+      supplier:[],
+      dataSupplier: []
+    }
+  },
+  methods: {
+    async getSupplier() {
+      const { data } = await axios.get("http://159.223.57.121:8090/supplier/find-all",
+        {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('Token')}`,
+            'Content-Type': 'application/json'
+          },
+          params: {
+            offset: 0,
+            limit: 15
+          }
+        });
+      console.log('data:', data.data);
+      this.dataSupplier = await data.data;
+    },
+    tambahBarang: async function () {
+      let dataBarang = {
+        namaBarang: this.namaBarang,
+        harga: this.alamahargat,
+        stok: this.noTstokelp,
+        supplier: this.supplier
+      }
+      await axios.post("http://159.223.57.121:8090/barang/create", dataBarang, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('Token')}`,
+          'Content-Type': 'application/json'
+        },
+      })
+        .then(async (response) => {
+          const data = await response.data;
+          if (data.status === 'OK') {
+            alert('sukses tambah Barang');
+          }
+          this.$router.push('/barang');
+          this.namaBarang = "";
+          this.harga = "";
+          this.stok = "";
+          this.supplier = "";
+        });
+    },
+  },
+  created() {
+    this.getSupplier(); 
+  },
+};
 </script>
+
 
 <style></style>
