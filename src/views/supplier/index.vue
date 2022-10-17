@@ -23,6 +23,9 @@
             <router-link type="button" class="btn btn-outline-primary" to="/indexsup">Supplier</router-link>
             <br />
             <router-link type="button" class="btn btn-outline-primary" to="/indexbar">Barang</router-link>
+            <button @click="logout" class="btn btn-danger">
+              LogOut
+            </button>
           </div>
         </div>
 
@@ -102,6 +105,17 @@ export default {
       });
       this.dataTable = data;
     },
+    logout() {
+          localStorage.clear();
+          setTimeout(() => {
+            router.push(
+              {
+                path: "/",
+              },
+              3000
+            );
+          });
+        },
     async deleteTableRow(id) {
       console.log("id:", id);
       await axios

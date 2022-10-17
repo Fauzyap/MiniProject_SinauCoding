@@ -23,6 +23,9 @@
             <router-link type="button" class="btn btn-outline-primary" to="/indexsup">Supplier</router-link>
             <br />
             <router-link type="button" class="btn btn-outline-primary" to="/indexbar">Barang</router-link>
+            <button @click="logout" class="btn btn-danger">
+              LogOut
+            </button>
           </div>
         </div>
 
@@ -74,13 +77,13 @@
 </template>
 
 <style scoped>
-.kepsyen{
+.kepsyen {
   font-weight: bolder;
 }
 </style>
 
-
 <script>
+import router from '@/router'
 import axios from "axios";
 
 export default {
@@ -104,9 +107,23 @@ export default {
           offset: 0,
           limit: 15,
         },
+        
       });
+      
       this.dataTable = data;
+      
     },
+    logout() {
+          localStorage.clear();
+          setTimeout(() => {
+            router.push(
+              {
+                path: "/",
+              },
+              3000
+            );
+          });
+        },
     async deleteTableRow(id) {
       console.log("id:", id);
       await axios
