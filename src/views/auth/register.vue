@@ -1,35 +1,31 @@
 <template>
-  <div class="container">
-    <div class="col">
+  <div class="container-fluid vh-100 d-flex align-items-center justify-content-center">
+    <div class="container">
       <div class="row">
-        <div class="col">
-          <div class="img-with-text">
-            <img src="../../assets/img/sinaulogo.png" alt="sometext" />
-            <h1>Selamat Datang</h1>
-          </div>
-
-          <div class="card">
-            <h5 class="card-header chead text-center">Register</h5>
-            <div class="card-body">
-              <form @submit.prevent="register">
-                <div class="form-group">
-                  <label for="">Profile Name</label>
-                  <input type="text" v-model="profileName" class="form-control" placeholder="Enter Profile Name" />
-                </div>
-                <div class="form-group">
-                  <label for="">Username</label>
-                  <input type="text" v-model="username" class="form-control" placeholder="Enter Username" />
-                </div>
-                <div class="form-group">
-                  <label for="">Password</label>
-                  <input type="password" v-model="password" class="form-control" placeholder="Enter Password" />
-                </div>
-                <div class="text-center mt-2">
-                  <button type="submit" class="btn btn-primary">Submit</button>
-                </div>
-              </form>
+        <div class="col-md-6 col-sm-12 d-none d-lg-block">
+          <img class="img-fluid block" src="../../assets/img/sinaulogo.png" />
+        </div>
+        <div class="col-md-12 col-lg-6 col-sm-12 col-12 shadow p-4">
+          <form @submit.prevent="register">
+            
+            <div>
+              <h3 class="text-center">Register</h3>
             </div>
-          </div>
+            <div class="mb-3">
+              <label class="form-label" for="inputName">Profile Name</label>
+              <input type="text" v-model="profileName" class="form-control" id="inputName" placeholder="ProfileName" />
+            </div>
+            <div class="mb-3">
+              <label class="form-label" for="inputEmail">Username</label>
+              <input type="text" v-model="username" class="form-control rounded-3" id="inputEmail" placeholder="Username" />
+            </div>
+            <div class="mb-3">
+              <label class="form-label" for="inputPassword">Password</label>
+              <input type="password" v-model="password" class="form-control" id="inputPassword" placeholder="Password" />
+            </div>
+            <button type="submit" class="btn btn-primary w-100 rounded rounded-3">Sign in</button>
+            <router-link to="/" class="mt-4 text-dark block">sudah Punya Akun?</router-link>
+          </form>
         </div>
       </div>
     </div>

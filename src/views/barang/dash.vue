@@ -5,7 +5,7 @@
     <div class="container">
       <div class="row">
         <div class="col-2">
-          <sidebar/>
+          <sidebar />
         </div>
 
         <div class="col-10">
@@ -49,6 +49,13 @@
               </tr>
             </tbody>
           </table>
+          <div class="d-flex justify-content-end p-4">
+            <div class="px-2">
+              <button @click="prev()" class="btn btn-primary">Previous Page</button>
+            </div>
+            <button @click="next()" class="btn btn-primary">Next Page</button>
+          
+          </div>
         </div>
       </div>
     </div>
@@ -68,59 +75,77 @@ import navbar from "../../components/navbar.vue";
 import sidebar from "../../components/sidebar.vue";
 
 export default {
-    name: "tableBarang",
-    data: function () {
-        return {
-            dataTable: [],
-            name: localStorage.getItem("profileName"),
-        };
-    },
-    created() {
-        this.getData();
-    },
-    components: {
+  name: "tableBarang",
+  data: function () {
+    return {
+      dataTable: [],
+      name: localStorage.getItem("profileName"),
+      result: [],
+      show: false,
+      offset: 1,
+      form: { params: "" },
+    };
+  },
+  created() {
+    this.getData();
+  },
+  components: {
     navbar,
     sidebar,
   },
-    methods: {
-        async getData() {
-            const { data } = await axios.get("http://159.223.57.121:8090/barang/find-all", {
-                headers: {
-                    Authorization: "Bearer " + localStorage.getItem("token"),
-                },
-                params: {
-                    offset: 0,
-                    limit: 15,
-                },
-            });
-            this.dataTable = data;
-        },
-        logout() {
-            localStorage.clear();
-            setTimeout(() => {
-                router.push({
-                    path: "/",
-                }, 3000);
-            });
-        },
-        async deleteTableRow(id) {
-            console.log("id:", id);
-            await axios
-                .delete("http://159.223.57.121:8090/barang/delete/" + id, {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
-                    "Content-Type": "application/json",
-                },
-            })
-                .then(async (response) => {
-                const data = await response.data;
-                if (data.status === "OK") {
-                    alert("Hapus Barang sukses");
-                    this.getData();
-                }
-            });
-        },
-    },
+  methods: {
     
+    async getData() {
+      const { data } = await axios.get("http://159.223.57.121:8090/barang/find-all", {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+        params: {
+          offset: this.offset,
+          limit: 15,
+        },
+      });
+      this.dataTable = data;
+    },
+    next() {
+      this.offset++;
+      this.getData();
+    },
+    prev() {
+      if (this.offset <= 1) {
+        this.offset = 1;
+      } else {
+        this.offset--;
+      }
+    },
+    logout() {
+      localStorage.clear();
+      setTimeout(() => {
+        router.push(
+          {
+            path: "/",
+          },
+          3000
+        );
+      });
+    },
+    async deleteTableRow(id) {
+      console.log("id:", id);
+      await axios
+        .delete("http://159.223.57.121:8090/barang/delete/" + id, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "application/json",
+          },
+        })
+        .then(async (response) => {
+          const data = await response.data;
+          if (data.status === "OK") {
+            alert("Hapus Barang sukses");
+            this.getData();
+          }
+        });
+    },
+  },
 };
 </script>
