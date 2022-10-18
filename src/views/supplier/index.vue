@@ -1,34 +1,11 @@
 <template>
-  <nav class="navbar">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="#">
-        MARKETPLACE
-        <img src="../../assets/img/sinaulogo.png" alt="Logo" width="100" height="30" class="d-inline-block align-text-top" />
-      </a>
-    </div>
-  </nav>
-
+  <navbar />
   <div class="container-fluid d-flex gap-5 mt-3">
     <div class="container">
       <div class="row">
         <div class="col-2">
-          <div class="card kard align-self-start">
-            <img src="../../assets/img/profile.jpg" class="card-img-top" alt="..." />
-            <div class="card-body kartu-bodi">
-              <h5 class="card-title">{{ name }}</h5>
-            </div>
-          </div>
-          <div class="card my-2">
-            <div class="card-header chead text-center">Menu</div>
-            <router-link type="button" class="btn btn-outline-primary" to="/indexsup">Supplier</router-link>
-            <br />
-            <router-link type="button" class="btn btn-outline-primary" to="/indexbar">Barang</router-link>
-            <button @click="logout" class="btn btn-danger">
-              LogOut
-            </button>
-          </div>
+          <sidebar />
         </div>
-
         <div class="col-10">
           <div class="card">
             <div class="card-header chead">Dashboard</div>
@@ -80,6 +57,8 @@
 
 <script>
 import axios from "axios";
+import navbar from "@/components/navbar.vue";
+import Sidebar from "../../components/sidebar.vue";
 
 export default {
   name: "tableSupplier",
@@ -91,6 +70,10 @@ export default {
   },
   created() {
     this.getData();
+  },
+  components: {
+    navbar,
+    Sidebar,
   },
   methods: {
     async getData() {
@@ -106,16 +89,16 @@ export default {
       this.dataTable = data;
     },
     logout() {
-          localStorage.clear();
-          setTimeout(() => {
-            router.push(
-              {
-                path: "/",
-              },
-              3000
-            );
-          });
-        },
+      localStorage.clear();
+      setTimeout(() => {
+        router.push(
+          {
+            path: "/",
+          },
+          3000
+        );
+      });
+    },
     async deleteTableRow(id) {
       console.log("id:", id);
       await axios
@@ -127,7 +110,6 @@ export default {
         })
         .then(async (response) => {
           const data = await response.data;
-
           if (data.status === "OK") {
             alert("Hapus Supplier sukses");
             this.getData();
